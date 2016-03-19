@@ -1,27 +1,3 @@
-/**
- * The MIT License (MIT)
- *
- * Copyright (c) 2016 Przemysław Chmielewski
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 function getTodoLists() {
     return browser.elements('.list-todo').value;
 }
@@ -38,8 +14,8 @@ describe('Views', function() {
 
     describe('/', function() {
         beforeEach(function() {
-            browser.url('http://localhost:3000/lists/0');
-            browser.waitForVisible('.title-page');
+            browser.url('http://localhost:3000');
+            browser.waitForExist('.title-page');
         });
 
         it('page title should be set by the Meteor method @watch', function () {
@@ -47,45 +23,35 @@ describe('Views', function() {
         });
 
         it('user should be able to create todo list @watch', function () {
-            var todoListsLengthBefore = getTodoLists().length;
+            var initialTodoListLength = getTodoLists().length;
             browser.click('.js-new-list');
 
-            var todoListsLengthAfter = getTodoLists().length;
-            var expectedTodoListLength = todoListsLengthBefore + 1;
-            expect(todoListsLengthAfter).to.equal(expectedTodoListLength);
-        });
-
-        it('user should be able to rename the todo list @watch', function () {
-            browser.click('.title-page');
-
-            var todoListName = 'todoListName';
-            browser.setValue('[name="name"]', todoListName);
-            browser.waitForVisible('.list-edit-form');
-            browser.submitForm('.list-edit-form');
-
-            expect(browser.getText('.list-todo')).to.equal(todoListName)
+            var actualTodoListLength = getTodoLists().length;
+            var expectedTodoListLength = initialTodoListLength + 1;
+            expect(actualTodoListLength).to.equal(expectedTodoListLength);
         });
 
         it('user should be able to add task @watch', function () {
-            var todoItemsLengthBefore= getTodoItems().length;
+            var initialTodoItemsLength= getTodoItems().length;
 
             browser.setValue('.page.lists-show nav form.todo-new input[type="text"]', 'new task');
             browser.submitForm('.page.lists-show nav form.todo-new');
 
-            var todoItemsLengthAfter = getTodoItems().length;
-            var expectedTodoItemsLength = todoItemsLengthBefore + 1;
-            expect(todoItemsLengthAfter).to.equal(expectedTodoItemsLength);
+            var actualTodoItemsLength = getTodoItems().length;
+            var expectedTodoItemsLength = initialTodoItemsLength + 1;
+            expect(actualTodoItemsLength).to.equal(expectedTodoItemsLength);
         });
 
         it('user should be able to remove task @watch', function () {
-            var todoItemsLengthBefore = getTodoItems().length;
-            expect(todoItemsLengthBefore).to.be.at.least(1);
+            var initialTodoItemsLength = getTodoItems().length;
+            expect(initialTodoItemsLength).to.be.at.least(1);
 
             browser.click('.list-item');
             browser.click('.list-items .list-item .delete-item');
 
-            var todoItemsLengthAfter = getTodoItems().length;
-            expect(todoItemsLengthAfter).to.be.empty;
+            var actualTodoItemsLength = getTodoItems().length;
+            var expectedTodoItemsLength = initialTodoItemsLength - 1;
+            expect(actualTodoItemsLength).to.equal(expectedTodoItemsLength);
         });
     });
 

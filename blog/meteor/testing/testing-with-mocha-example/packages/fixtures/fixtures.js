@@ -1,4 +1,38 @@
-// Write your package code here!
+var defaultData  = [
+    {name: "Meteor Principles",
+        items: ["Data on the Wire",
+            "One Language",
+            "Database Everywhere",
+            "Latency Compensation",
+            "Full Stack Reactivity",
+            "Embrace the Ecosystem",
+            "Simplicity Equals Productivity"
+        ]
+    },
+    {name: "Languages",
+        items: ["Lisp",
+            "C",
+            "C++",
+            "Python",
+            "Ruby",
+            "JavaScript",
+            "Scala",
+            "Erlang",
+            "6502 Assembly"
+        ]
+    },
+    {name: "Favorite Scientists",
+        items: ["Ada Lovelace",
+            "Grace Hopper",
+            "Marie Curie",
+            "Carl Friedrich Gauss",
+            "Nikola Tesla",
+            "Claude Shannon"
+        ]
+    }
+];
+
+var timestamp = (new Date()).getTime();
 
 Meteor.methods({
     'fixtures/loadFixtures': function(){
@@ -8,20 +42,18 @@ Meteor.methods({
                 email: 'email@example.com',
                 password: '123456'
             });
-            var id = '0';
-            Todos.insert({
-                listId: id,
-                text: 'todoTestedValue',
-                checked: false,
-                createdAt: new Date()
-            });
 
-            var list = {
-                _id: id,
-                name: 'listName',
-                incompleteCount: 0
-            };
-            Lists.insert(list);
+            _.each(defaultData, function(list) {
+                var list_id = Lists.insert({name: list.name,
+                    incompleteCount: list.items.length});
+
+                _.each(list.items, function(text) {
+                    Todos.insert({listId: list_id,
+                        text: text,
+                        createdAt: new Date(timestamp)});
+                    timestamp += 1; // ensure unique timestamp.
+                });
+            });
 
             console.log('Finished loading default fixtures');
         } else {
