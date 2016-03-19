@@ -31,17 +31,6 @@ describe('Views', function() {
             expect(actualTodoListLength).to.equal(expectedTodoListLength);
         });
 
-        it('user should be able to add task @watch', function () {
-            var initialTodoItemsLength= getTodoItems().length;
-
-            browser.setValue('.page.lists-show nav form.todo-new input[type="text"]', 'new task');
-            browser.submitForm('.page.lists-show nav form.todo-new');
-
-            var actualTodoItemsLength = getTodoItems().length;
-            var expectedTodoItemsLength = initialTodoItemsLength + 1;
-            expect(actualTodoItemsLength).to.equal(expectedTodoItemsLength);
-        });
-
         it('user should be able to remove task @watch', function () {
             var initialTodoItemsLength = getTodoItems().length;
             expect(initialTodoItemsLength).to.be.at.least(1);
